@@ -24,7 +24,7 @@ namespace LT.DigitalOffice.SkillService.Business.Commands.Skill
 
     public async Task<OperationResultResponse<Guid?>> ExecuteAsync(string name)
     {
-      if (name is null || String.IsNullOrEmpty(name.Trim()) || name.Length > 100)
+      if (name is null || String.IsNullOrEmpty(name.Trim()) || name.Trim().Length > 100)
       {
         return _responseCreator.CreateFailureResponse<Guid?>(HttpStatusCode.BadRequest);
       };

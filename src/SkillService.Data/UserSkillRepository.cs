@@ -30,6 +30,22 @@ namespace LT.DigitalOffice.SkillService.Data
         .Select(us => us.SkillId)
         .ToListAsync();
 
+      List<Guid> conflictSkills = new ();
+
+      foreach (Guid skillId in request.SkillsToAdd)
+      {
+        if (request.SkillsToRemove.Contains(skillId))
+        {
+          conflictSkills.Add(skillId);
+        }
+      }
+
+      foreach (Guid skillId in conflictSkills)
+      {
+        request.SkillsToAdd.Remove(skillId);
+        request.SkillsToRemove.Remove(skillId);
+      }
+
       foreach (Guid skillId in request.SkillsToAdd)
       {
         if (existSkills.Contains(skillId))
