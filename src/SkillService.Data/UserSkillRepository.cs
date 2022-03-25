@@ -41,21 +41,10 @@ namespace LT.DigitalOffice.SkillService.Data
     {
       List<Guid> existSkills = await _provider.UsersSkills
         .Where(us => us.UserId == userId).Select(us => us.SkillId).ToListAsync();
-      List<Guid> conflictSkills = new();
+      List<Guid> conflictSkills = request.SkillsToAdd.Intersect(request.SkillsToRemove).ToList();
 
-      request.SkillsToAdd = request.SkillsToAdd.GroupBy(x => x).Select(x => x.First()).ToList();
-      request.SkillsToRemove = request.SkillsToRemove.GroupBy(x => x).Select(x => x.First()).ToList();
-
-      foreach (Guid skillId in request.SkillsToAdd)
-      {
-        if (request.SkillsToRemove.Contains(skillId))
-        {
-          conflictSkills.Add(skillId);
-        }
-      }
-
-      request.SkillsToRemove.RemoveAll(id => conflictSkills.Contains(id));
-      request.SkillsToAdd.RemoveAll(id => conflictSkills.Contains(id));
+      request.SkillsToRemove = request.SkillsToRemove.Except(conflictSkills).ToList();
+      request.SkillsToAdd = request.SkillsToAdd.Except(conflictSkills).ToList();
 
       foreach (Guid skillId in request.SkillsToAdd)
       {

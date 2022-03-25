@@ -9,6 +9,7 @@ namespace SkillService.Validation
     public CreateSkillValidator(ISkillRepository skillRepository)
     {
       RuleFor(s => s.Trim())
+        .Cascade(CascadeMode.Stop)
         .NotEmpty().WithMessage("Name must not be empty or whitespace.")
         .MaximumLength(100).WithMessage("Name is too long");
 
