@@ -5,6 +5,7 @@
     <ItemGroup>
       <ProjectReference Include="..\SkillService.Data\SkillService.Data.csproj" />
       <ProjectReference Include="..\SkillService.Models.Dto\SkillService.Models.Dto.csproj" />
+      <ProjectReference Include="..\SkillService.Validation\SkillService.Validation.csproj" />
     </ItemGroup>
 
 </Project>

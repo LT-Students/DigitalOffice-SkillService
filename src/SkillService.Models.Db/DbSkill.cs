@@ -11,6 +11,7 @@ namespace LT.DigitalOffice.SkillService.Models.Db
     public string Name { get; set; }
     public Guid CreatedBy { get; set; }
     public DateTime CreatedAtUtc { get; set; }
+    public DateTime? BecameUnusedAtUtc { get; set; }
     public int TotalCount { get; set; }
 
     public ICollection<DbUserSkill> UsersSkills { get; set; }

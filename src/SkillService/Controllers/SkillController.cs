@@ -13,7 +13,7 @@ namespace LT.DigitalOffice.SkillService.Controllers
     [HttpPost("create")]
     public async Task<OperationResultResponse<Guid?>> CreateAsync(
       [FromServices] ICreateSkillCommand command,
-      [FromQuery] string name)
+      [FromBody] string name)
     {
       return await command.ExecuteAsync(name);
     }

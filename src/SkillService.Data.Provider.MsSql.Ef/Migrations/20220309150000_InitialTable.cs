@@ -19,6 +19,7 @@ namespace LT.DigitalOffice.SkillService.Data.Provider.MsSql.Ef.Migrations
           Name = table.Column<string>(nullable: false),
           CreatedBy = table.Column<Guid>(nullable: false),
           CreatedAtUtc = table.Column<DateTime>(nullable: false),
+          BecameUnusedAtUtc = table.Column<DateTime>(nullable: true),
           TotalCount = table.Column<int>(nullable: false)
         },
         constraints: table =>

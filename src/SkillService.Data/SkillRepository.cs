@@ -20,23 +20,25 @@ namespace LT.DigitalOffice.SkillService.Data
       _httpContextAccessor = httpContextAccessor;
     }
 
+    public async Task<bool> DoesNameExistAsync(string name)
+    {
+      return await _provider.Skills.AnyAsync(s => s.Name == name);
+    }
+
+    public async Task<bool> DoesNameExistAsync(Guid id)
+    {
+      return await _provider.Skills.AnyAsync(s => s.Id == id);
+    }
+
     public async Task<Guid?> CreateAsync(string name)
     {
-      name = name.Trim();
-
-      DbSkill existSkill = await _provider.Skills.FirstOrDefaultAsync(s => s.Name == name);
-
-      if (existSkill is not null)
-      {
-        return null;
-      }
-
       DbSkill skill = new DbSkill
       {
         Id = Guid.NewGuid(),
         Name = name,
         CreatedBy = _httpContextAccessor.HttpContext.GetUserId(),
         CreatedAtUtc = DateTime.UtcNow,
+        BecameUnusedAtUtc = DateTime.UtcNow,
         TotalCount = 0
       };
 

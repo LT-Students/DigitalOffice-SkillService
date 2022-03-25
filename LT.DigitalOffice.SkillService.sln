@@ -37,6 +37,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkillService.Data.Provider.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkillService.Models.Db", "src\SkillService.Models.Db\SkillService.Models.Db.csproj", "{E3667CCD-1772-4146-97D5-4C29AA14ECCE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkillService.Validation", "src\SkillService.Validation\SkillService.Validation.csproj", "{0252DA69-997E-4986-9735-5CD5CE26100D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,10 @@ Global
 		{E3667CCD-1772-4146-97D5-4C29AA14ECCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E3667CCD-1772-4146-97D5-4C29AA14ECCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E3667CCD-1772-4146-97D5-4C29AA14ECCE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0252DA69-997E-4986-9735-5CD5CE26100D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0252DA69-997E-4986-9735-5CD5CE26100D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0252DA69-997E-4986-9735-5CD5CE26100D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0252DA69-997E-4986-9735-5CD5CE26100D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -83,6 +89,7 @@ Global
 		{FBCE9DE0-7A78-4842-B5F1-3576E47683EC} = {AD5A445D-BE9D-481F-A707-D959F7F9C0EA}
 		{3DF75FD1-E20B-4F51-B1CE-DDDA19892A00} = {AD5A445D-BE9D-481F-A707-D959F7F9C0EA}
 		{E3667CCD-1772-4146-97D5-4C29AA14ECCE} = {AD5A445D-BE9D-481F-A707-D959F7F9C0EA}
+		{0252DA69-997E-4986-9735-5CD5CE26100D} = {AD5A445D-BE9D-481F-A707-D959F7F9C0EA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {54F0B529-A010-427A-B433-CBA62759C3F9}
