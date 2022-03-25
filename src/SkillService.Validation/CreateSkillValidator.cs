@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using FluentValidation;
+﻿using FluentValidation;
 using LT.DigitalOffice.SkillService.Data.Interfaces;
 using LT.DigitalOffice.SkillService.Validation.Interfaces;
 
@@ -15,7 +14,7 @@ namespace SkillService.Validation
 
       RuleFor(s => s)
         .MustAsync(async (name, _) => !await skillRepository
-        .DoesNameExistAsync(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(name.Trim())))
+        .DoesNameExistAsync(name.Trim().ToLower()))
         .WithMessage("The skill already exists.");
     }
   }

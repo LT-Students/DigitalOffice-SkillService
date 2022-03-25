@@ -18,7 +18,8 @@ namespace LT.DigitalOffice.SkillService.Data
     private readonly IHttpContextAccessor _httpContextAccessor;
 
     public UserSkillRepository(
-      IDataProvider provider, IHttpContextAccessor httpContextAccessor)
+      IDataProvider provider,
+      IHttpContextAccessor httpContextAccessor)
     {
       _provider = provider;
       _httpContextAccessor = httpContextAccessor;
@@ -26,19 +27,13 @@ namespace LT.DigitalOffice.SkillService.Data
 
     public async Task RemoveUnusedSkillsAsync()
     {
-      List<DbSkill> skills = await _provider.Skills.ToListAsync();
+      List<DbSkill> skills = await _provider.Skills
+        .Where(s => s.BecameUnusedAtUtc != null).ToListAsync();
+      skills = skills
+        .Where(s => (DateTime.UtcNow - (DateTime)s.BecameUnusedAtUtc).TotalDays > 1)
+        .ToList();
 
-      foreach (DbSkill skill in skills)
-      {
-        if (skill.BecameUnusedAtUtc is not null)
-        {
-          if ((DateTime.UtcNow - (DateTime)skill.BecameUnusedAtUtc).TotalDays > 1)
-          {
-            _provider.Skills.Remove(skill);
-          }
-        }
-      }
-
+      _provider.Skills.RemoveRange(skills);
       await _provider.SaveAsync();
     }
 
@@ -47,6 +42,9 @@ namespace LT.DigitalOffice.SkillService.Data
       List<Guid> existSkills = await _provider.UsersSkills
         .Where(us => us.UserId == userId).Select(us => us.SkillId).ToListAsync();
       List<Guid> conflictSkills = new();
+
+      request.SkillsToAdd = request.SkillsToAdd.GroupBy(x => x).Select(x => x.First()).ToList();
+      request.SkillsToRemove = request.SkillsToRemove.GroupBy(x => x).Select(x => x.First()).ToList();
 
       foreach (Guid skillId in request.SkillsToAdd)
       {
@@ -102,8 +100,8 @@ namespace LT.DigitalOffice.SkillService.Data
         }
       }
 
-      await RemoveUnusedSkillsAsync();
       await _provider.SaveAsync();
+      await RemoveUnusedSkillsAsync();
 
       return true;
     }

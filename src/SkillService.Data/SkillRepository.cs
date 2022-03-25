@@ -14,7 +14,9 @@ namespace LT.DigitalOffice.SkillService.Data
     private readonly IDataProvider _provider;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public SkillRepository(IDataProvider provider, IHttpContextAccessor httpContextAccessor)
+    public SkillRepository(
+      IDataProvider provider,
+      IHttpContextAccessor httpContextAccessor)
     {
       _provider = provider;
       _httpContextAccessor = httpContextAccessor;

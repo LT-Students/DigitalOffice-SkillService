@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -42,8 +41,7 @@ namespace LT.DigitalOffice.SkillService.Business.Commands.Skill
 
       OperationResultResponse<Guid?> response = new();
 
-      response.Body = await _repository
-        .CreateAsync(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(name.Trim()));
+      response.Body = await _repository.CreateAsync(name.Trim().ToLower());
       response.Status = OperationResultStatusType.FullSuccess;
 
       if (response.Body is null)
