@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using FluentValidation.Results;
+using LT.DigitalOffice.Kernel.FluentValidationExtensions;
 using LT.DigitalOffice.Kernel.Helpers.Interfaces;
 using LT.DigitalOffice.Kernel.Responses;
 using LT.DigitalOffice.SkillService.Business.Commands.Skill.Interfaces;
@@ -37,13 +37,9 @@ namespace LT.DigitalOffice.SkillService.Business.Commands.Skill
 
     public async Task<OperationResultResponse<Guid?>> ExecuteAsync(string name)
     {
-      ValidationResult validationResult = await _validator.ValidateAsync(name);
-
-      if (!validationResult.IsValid)
+      if (!_validator.ValidateCustom(name, out List<string> errors))
       {
-        return _responseCreator.CreateFailureResponse<Guid?>(
-          HttpStatusCode.BadRequest,
-          validationResult.Errors.Select(vf => vf.ErrorMessage).ToList());
+        return _responseCreator.CreateFailureResponse<Guid?>(HttpStatusCode.BadRequest, errors);
       }
 
       OperationResultResponse<Guid?> response = new();
