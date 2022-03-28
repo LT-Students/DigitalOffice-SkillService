@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using LT.DigitalOffice.Kernel.Extensions;
 using LT.DigitalOffice.SkillService.Data.Interfaces;
 using LT.DigitalOffice.SkillService.Data.Provider;
 using LT.DigitalOffice.SkillService.Models.Db;
@@ -12,14 +13,26 @@ namespace LT.DigitalOffice.SkillService.Data
   public class SkillRepository : ISkillRepository
   {
     private readonly IDataProvider _provider;
-    private readonly IHttpContextAccessor _httpContextAccessor;
+    //private readonly IHttpContextAccessor _httpContextAccessor;
 
     public SkillRepository(
-      IDataProvider provider,
-      IHttpContextAccessor httpContextAccessor)
+      IDataProvider provider)
+      //IHttpContextAccessor httpContextAccessor)
     {
       _provider = provider;
-      _httpContextAccessor = httpContextAccessor;
+      //_httpContextAccessor = httpContextAccessor;
+    }
+
+    public async Task RemoveUnusedSkillsAsync()
+    {
+      List<DbSkill> skills = await _provider.Skills
+        .Where(s => s.BecameUnusedAtUtc != null).ToListAsync();
+      skills = skills
+        .Where(s => (DateTime.UtcNow - (DateTime)s.BecameUnusedAtUtc).TotalDays > 1)
+        .ToList();
+
+      _provider.Skills.RemoveRange(skills);
+      await _provider.SaveAsync();
     }
 
     public async Task<bool> DoesNameExistAsync(string name)
@@ -32,17 +45,12 @@ namespace LT.DigitalOffice.SkillService.Data
       return await _provider.Skills.AnyAsync(s => s.Id == id);
     }
 
-    public async Task<Guid?> CreateAsync(string name)
+    public async Task<Guid?> CreateAsync(DbSkill skill)
     {
-      DbSkill skill = new DbSkill
+      if (skill is null)
       {
-        Id = Guid.NewGuid(),
-        Name = name,
-        CreatedBy = _httpContextAccessor.HttpContext.GetUserId(),
-        CreatedAtUtc = DateTime.UtcNow,
-        BecameUnusedAtUtc = DateTime.UtcNow,
-        TotalCount = 0
-      };
+        return null;
+      }
 
       _provider.Skills.Add(skill);
       await _provider.SaveAsync();

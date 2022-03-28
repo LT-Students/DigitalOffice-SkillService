@@ -8,7 +8,6 @@ namespace LT.DigitalOffice.SkillService.Data.Interfaces
   [AutoInject]
   public interface IUserSkillRepository
   {
-    Task RemoveUnusedSkillsAsync();
     Task<bool> EditAsync(Guid userId, EditUserSkillRequest request);
   }
 }

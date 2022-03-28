@@ -25,18 +25,6 @@ namespace LT.DigitalOffice.SkillService.Data
       _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task RemoveUnusedSkillsAsync()
-    {
-      List<DbSkill> skills = await _provider.Skills
-        .Where(s => s.BecameUnusedAtUtc != null).ToListAsync();
-      skills = skills
-        .Where(s => (DateTime.UtcNow - (DateTime)s.BecameUnusedAtUtc).TotalDays > 1)
-        .ToList();
-
-      _provider.Skills.RemoveRange(skills);
-      await _provider.SaveAsync();
-    }
-
     public async Task<bool> EditAsync(Guid userId, EditUserSkillRequest request)
     {
       List<Guid> existSkills = await _provider.UsersSkills
@@ -52,6 +40,7 @@ namespace LT.DigitalOffice.SkillService.Data
         {
           DbSkill skill = await _provider.Skills.FirstOrDefaultAsync(s => s.Id == skillId);
 
+          //mapper
           _provider.UsersSkills.Add(new DbUserSkill
           {
             Id = new Guid(),
@@ -90,7 +79,6 @@ namespace LT.DigitalOffice.SkillService.Data
       }
 
       await _provider.SaveAsync();
-      await RemoveUnusedSkillsAsync();
 
       return true;
     }

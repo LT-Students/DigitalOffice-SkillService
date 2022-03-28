@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using FluentValidation.Results;
 using LT.DigitalOffice.Kernel.BrokerSupport.AccessValidatorEngine.Interfaces;
 using LT.DigitalOffice.Kernel.Constants;
-using LT.DigitalOffice.Kernel.Enums;
 using LT.DigitalOffice.Kernel.Extensions;
 using LT.DigitalOffice.Kernel.Helpers.Interfaces;
 using LT.DigitalOffice.Kernel.Responses;
@@ -19,25 +18,29 @@ namespace LT.DigitalOffice.SkillService.Business.Commands.UserSkill
 {
   public class EditUserSkillCommand : IEditUserSkillCommand
   {
-    private readonly IUserSkillRepository _repository;
+    private readonly IUserSkillRepository _userSkillRepository;
+    private readonly ISkillRepository _skillRepository;
     private readonly IAccessValidator _accessValidator;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IResponseCreator _responseCreator;
     private readonly IEditUserSkillValidator _validator;
 
     public EditUserSkillCommand(
-      IUserSkillRepository repository,
+      IUserSkillRepository userSkillRepository,
+      ISkillRepository skillRepository,
       IAccessValidator accessValidator,
       IHttpContextAccessor httpContextAccessor,
       IResponseCreator responseCreator,
       IEditUserSkillValidator validator)
     {
-      _repository = repository;
+      _userSkillRepository = userSkillRepository;
+      _skillRepository = skillRepository;
       _accessValidator = accessValidator;
       _httpContextAccessor = httpContextAccessor;
       _responseCreator = responseCreator;
       _validator = validator;
     }
+
     public async Task<OperationResultResponse<bool>> ExecuteAsync(Guid userId, EditUserSkillRequest request)
     {
       if (userId != _httpContextAccessor.HttpContext.GetUserId()
@@ -57,13 +60,14 @@ namespace LT.DigitalOffice.SkillService.Business.Commands.UserSkill
 
       OperationResultResponse<bool> response = new();
 
-      response.Body = await _repository.EditAsync(userId, request);
-      response.Status = OperationResultStatusType.FullSuccess;
+      response.Body = await _userSkillRepository.EditAsync(userId, request);
 
       if (!response.Body)
       {
         response = _responseCreator.CreateFailureResponse<bool>(HttpStatusCode.BadRequest);
       }
+
+      await _skillRepository.RemoveUnusedSkillsAsync();
 
       return response;
     }
