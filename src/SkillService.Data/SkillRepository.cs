@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using LT.DigitalOffice.SkillService.Data.Interfaces;
 using LT.DigitalOffice.SkillService.Data.Provider;
 using LT.DigitalOffice.SkillService.Models.Db;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace LT.DigitalOffice.SkillService.Data
@@ -13,14 +12,11 @@ namespace LT.DigitalOffice.SkillService.Data
   public class SkillRepository : ISkillRepository
   {
     private readonly IDataProvider _provider;
-    //private readonly IHttpContextAccessor _httpContextAccessor;
 
     public SkillRepository(
       IDataProvider provider)
-      //IHttpContextAccessor httpContextAccessor)
     {
       _provider = provider;
-      //_httpContextAccessor = httpContextAccessor;
     }
 
     public async Task RemoveUnusedSkillsAsync()
@@ -32,6 +28,46 @@ namespace LT.DigitalOffice.SkillService.Data
         .ToList();
 
       _provider.Skills.RemoveRange(skills);
+      await _provider.SaveAsync();
+    }
+
+    public async Task UpgradeTotalCountAsync(List<Guid> skillIds)
+    {
+      foreach(Guid skillId in skillIds)
+      {
+        DbSkill skill = await _provider.Skills.FirstOrDefaultAsync(s => s.Id == skillId);
+
+        if (skill is not null)
+        {
+          skill.TotalCount++;
+
+          if (skill.BecameUnusedAtUtc is not null)
+          {
+            skill.BecameUnusedAtUtc = null;
+          }
+        }
+      }
+
+      await _provider.SaveAsync();
+    }
+
+    public async Task DowngradeTotalCountAsync(List<Guid> skillIds)
+    {
+      foreach (Guid skillId in skillIds)
+      {
+        DbSkill skill = await _provider.Skills.FirstOrDefaultAsync(s => s.Id == skillId);
+
+        if (skill is not null)
+        {
+          skill.TotalCount--;
+
+          if (skill.TotalCount == 0)
+          {
+            skill.BecameUnusedAtUtc = DateTime.UtcNow;
+          }
+        }
+      }
+
       await _provider.SaveAsync();
     }
 

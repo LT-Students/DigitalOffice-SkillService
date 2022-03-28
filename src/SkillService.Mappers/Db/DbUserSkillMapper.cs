@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using LT.DigitalOffice.Kernel.Extensions;
 using LT.DigitalOffice.SkillService.Mappers.Db.Interfsaces;
 using LT.DigitalOffice.SkillService.Models.Db;
@@ -16,16 +17,21 @@ namespace LT.DigitalOffice.SkillService.Mappers.Db
       _httpContextAccessor = httpContextAccessor;
     }
 
-    public DbUserSkill Map(Guid userId, Guid skillId)
+    public List<DbUserSkill> Map(Guid userId, List<Guid> skillIds)
     {
-      return new DbUserSkill
+      List<DbUserSkill> userSkills = new();
+      foreach (Guid skillId in skillIds)
       {
-        Id = new Guid(),
-        UserId = userId,
-        SkillId = skillId,
-        AddedBy = _httpContextAccessor.HttpContext.GetUserId(),
-        AddedAtUtc = DateTime.UtcNow,
-      };
+        userSkills.Add(new DbUserSkill
+        {
+          Id = new Guid(),
+          UserId = userId,
+          SkillId = skillId,
+          AddedBy = _httpContextAccessor.HttpContext.GetUserId(),
+          AddedAtUtc = DateTime.UtcNow,
+        });
+      }
+      return userSkills;
     }
   }
 }
