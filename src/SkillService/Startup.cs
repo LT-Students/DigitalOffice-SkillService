@@ -9,9 +9,6 @@ using LT.DigitalOffice.Kernel.Configurations;
 using LT.DigitalOffice.Kernel.Extensions;
 using LT.DigitalOffice.Kernel.Helpers;
 using LT.DigitalOffice.Kernel.Middlewares.ApiInformation;
-using LT.DigitalOffice.Kernel.RedisSupport.Configurations;
-using LT.DigitalOffice.Kernel.RedisSupport.Helpers;
-using LT.DigitalOffice.Kernel.RedisSupport.Helpers.Interfaces;
 using LT.DigitalOffice.SkillService.Data.Provider.MsSql.Ef;
 using LT.DigitalOffice.SkillService.Models.Dto.Configuration;
 using MassTransit;
@@ -23,7 +20,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using Serilog;
-using StackExchange.Redis;
 
 namespace LT.DigitalOffice.SkillService
 {
@@ -71,18 +67,6 @@ namespace LT.DigitalOffice.SkillService
           });
       });
 
-      if (int.TryParse(Environment.GetEnvironmentVariable("RedisCacheLiveInMinutes"), out int redisCacheLifeTime))
-      {
-        services.Configure<RedisConfig>(options =>
-        {
-          options.CacheLiveInMinutes = redisCacheLifeTime;
-        });
-      }
-      else
-      {
-        services.Configure<RedisConfig>(Configuration.GetSection(RedisConfig.SectionName));
-      }
-
       services.Configure<TokenConfiguration>(Configuration.GetSection("CheckTokenMiddleware"));
       services.Configure<BaseRabbitMqConfig>(Configuration.GetSection(BaseRabbitMqConfig.SectionName));
       services.Configure<BaseServiceInfoConfig>(Configuration.GetSection(BaseServiceInfoConfig.SectionName));
@@ -108,32 +92,11 @@ namespace LT.DigitalOffice.SkillService
         Log.Information($"SQL connection string from environment was used. Value '{PasswordHider.Hide(connStr)}'.");
       }
 
-      services.AddDbContext<SkillServiceDbContext>(options =>
-      {
-        options.UseSqlServer(connStr);
-      });
+      services.AddSqlServer<SkillServiceDbContext>(connStr);
 
       services
         .AddHealthChecks()
         .AddRabbitMqCheck();
-
-      string redisConnStr = Environment.GetEnvironmentVariable("RedisConnectionString");
-      if (string.IsNullOrEmpty(redisConnStr))
-      {
-        redisConnStr = Configuration.GetConnectionString("Redis");
-
-        Log.Information($"Redis connection string from appsettings.json was used. Value '{PasswordHider.Hide(redisConnStr)}'");
-      }
-      else
-      {
-        Log.Information($"Redis connection string from environment was used. Value '{PasswordHider.Hide(redisConnStr)}'");
-      }
-
-      services.AddSingleton<IConnectionMultiplexer>(
-        x => ConnectionMultiplexer.Connect(redisConnStr));
-
-      services.AddTransient<ICacheNotebook, CacheNotebook>();
-      services.AddTransient<IRedisHelper, RedisHelper>();
 
       services.AddBusinessObjects();
 
