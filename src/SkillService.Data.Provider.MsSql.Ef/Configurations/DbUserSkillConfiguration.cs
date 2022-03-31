@@ -15,7 +15,7 @@ namespace LT.DigitalOffice.SkillService.Data.Provider.MsSql.Ef.Configurations
         .HasKey(us => us.Id);
 
       builder
-        .HasMany(us => us.Skills)
+        .HasOne(us => us.Skill)
         .WithMany(s => s.UsersSkills);
     }
   }

@@ -13,11 +13,6 @@ namespace LT.DigitalOffice.SkillService.Models.Db
     public Guid CreatedBy { get; set; }
     public DateTime CreatedAtUtc { get; set; }
 
-    public ICollection<DbSkill> Skills { get; set; }
-
-    public DbUserSkill()
-    {
-      Skills = new HashSet<DbSkill>();
-    }
+    public DbSkill Skill { get; set; }
   }
 }

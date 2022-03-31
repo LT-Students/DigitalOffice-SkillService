@@ -20,7 +20,7 @@ namespace LT.DigitalOffice.SkillService.Data.Provider.MsSql.Ef.Configurations
 
       builder
         .HasMany(s => s.UsersSkills)
-        .WithMany(us => us.Skills);
+        .WithOne(us => us.Skill);
     }
   }
 }
