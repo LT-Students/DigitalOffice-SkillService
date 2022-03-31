@@ -8,6 +8,6 @@ namespace LT.DigitalOffice.SkillService.Mappers.Db.Interfsaces
   [AutoInject]
   public interface IDbUserSkillMapper
   {
-    List<DbUserSkill> Map(Guid userId, List<Guid> skillIds);
+    List<DbUserSkill> Map(Guid userId, List<Guid> skillsIds);
   }
 }

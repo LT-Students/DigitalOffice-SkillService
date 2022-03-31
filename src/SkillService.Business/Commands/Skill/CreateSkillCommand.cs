@@ -17,14 +17,14 @@ namespace LT.DigitalOffice.SkillService.Business.Commands.Skill
   {
     private readonly ISkillRepository _repository;
     private readonly IResponseCreator _responseCreator;
-    private readonly ICreateSkillValidator _validator;
+    private readonly ICreateSkillRequestValidator _validator;
     private readonly IDbSkillMapper _mapper;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
     public CreateSkillCommand(
       ISkillRepository repository,
       IResponseCreator responseCreator,
-      ICreateSkillValidator validator,
+      ICreateSkillRequestValidator validator,
       IDbSkillMapper mapper,
       IHttpContextAccessor httpContextAccessor)
     {
@@ -45,13 +45,12 @@ namespace LT.DigitalOffice.SkillService.Business.Commands.Skill
       OperationResultResponse<Guid?> response = new();
 
       response.Body = await _repository.CreateAsync(_mapper.Map(name));
+      _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.Created;
 
       if (response.Body is null)
       {
         response = _responseCreator.CreateFailureResponse<Guid?>(HttpStatusCode.BadRequest);
       }
-
-      _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.Created;
 
       return response;
     }

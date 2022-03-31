@@ -4,14 +4,14 @@ using LT.DigitalOffice.SkillService.Validation.Interfaces;
 
 namespace SkillService.Validation
 {
-  public class CreateSkillValidator : AbstractValidator<string>, ICreateSkillValidator
+  public class CreateSkillRequestValidator : AbstractValidator<string>, ICreateSkillRequestValidator
   {
-    public CreateSkillValidator(ISkillRepository skillRepository)
+    public CreateSkillRequestValidator(ISkillRepository skillRepository)
     {
       RuleFor(s => s.Trim())
         .Cascade(CascadeMode.Stop)
         .NotEmpty().WithMessage("Name must not be empty or whitespace.")
-        .MaximumLength(100).WithMessage("Name is too long");
+        .MaximumLength(100).WithMessage("Name is too long.");
 
       RuleFor(s => s)
         .MustAsync(async (name, _) => !await skillRepository

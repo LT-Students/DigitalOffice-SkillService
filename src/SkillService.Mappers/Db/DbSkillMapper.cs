@@ -18,11 +18,6 @@ namespace LT.DigitalOffice.SkillService.Mappers.Db
 
     public DbSkill Map(string name)
     {
-      if (name is null || name.Trim().Length == 0)
-      {
-        return null;
-      }
-
       return new DbSkill
       {
         Id = Guid.NewGuid(),

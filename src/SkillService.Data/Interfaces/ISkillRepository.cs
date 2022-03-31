@@ -9,11 +9,11 @@ namespace LT.DigitalOffice.SkillService.Data.Interfaces
   [AutoInject]
   public interface ISkillRepository
   {
-    Task RemoveUnusedSkillsAsync();
+    Task RemoveUnusedAsync();
 
-    Task UpgradeTotalCountAsync(List<Guid> skillIds);
+    Task UpgradeTotalCountAsync(List<Guid> skillsIds);
 
-    Task DowngradeTotalCountAsync(List<Guid> skillIds);
+    Task DowngradeTotalCountAsync(List<Guid> skillsIds);
 
     Task<bool> DoesNameExistAsync(string name);
 

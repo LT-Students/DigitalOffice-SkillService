@@ -17,10 +17,11 @@ namespace LT.DigitalOffice.SkillService.Mappers.Db
       _httpContextAccessor = httpContextAccessor;
     }
 
-    public List<DbUserSkill> Map(Guid userId, List<Guid> skillIds)
+    public List<DbUserSkill> Map(Guid userId, List<Guid> skillsIds)
     {
       List<DbUserSkill> userSkills = new();
-      foreach (Guid skillId in skillIds)
+
+      foreach (Guid skillId in skillsIds)
       {
         userSkills.Add(new DbUserSkill
         {
@@ -31,6 +32,7 @@ namespace LT.DigitalOffice.SkillService.Mappers.Db
           AddedAtUtc = DateTime.UtcNow,
         });
       }
+
       return userSkills;
     }
   }

@@ -19,7 +19,7 @@ namespace LT.DigitalOffice.SkillService.Data
       _provider = provider;
     }
 
-    public async Task RemoveUnusedSkillsAsync()
+    public async Task RemoveUnusedAsync()
     {
       List<DbSkill> skills = await _provider.Skills
         .Where(s => s.BecameUnusedAtUtc != null).ToListAsync();
@@ -31,9 +31,9 @@ namespace LT.DigitalOffice.SkillService.Data
       await _provider.SaveAsync();
     }
 
-    public async Task UpgradeTotalCountAsync(List<Guid> skillIds)
+    public async Task UpgradeTotalCountAsync(List<Guid> skillsIds)
     {
-      foreach(Guid skillId in skillIds)
+      foreach(Guid skillId in skillsIds)
       {
         DbSkill skill = await _provider.Skills.FirstOrDefaultAsync(s => s.Id == skillId);
 
@@ -51,9 +51,9 @@ namespace LT.DigitalOffice.SkillService.Data
       await _provider.SaveAsync();
     }
 
-    public async Task DowngradeTotalCountAsync(List<Guid> skillIds)
+    public async Task DowngradeTotalCountAsync(List<Guid> skillsIds)
     {
-      foreach (Guid skillId in skillIds)
+      foreach (Guid skillId in skillsIds)
       {
         DbSkill skill = await _provider.Skills.FirstOrDefaultAsync(s => s.Id == skillId);
 

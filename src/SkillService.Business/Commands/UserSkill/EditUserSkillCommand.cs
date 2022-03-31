@@ -25,7 +25,7 @@ namespace LT.DigitalOffice.SkillService.Business.Commands.UserSkill
     private readonly IAccessValidator _accessValidator;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IResponseCreator _responseCreator;
-    private readonly IEditUserSkillValidator _validator;
+    private readonly IEditUserSkillRequestValidator _validator;
     private readonly IDbUserSkillMapper _mapper;
 
     public EditUserSkillCommand(
@@ -34,7 +34,7 @@ namespace LT.DigitalOffice.SkillService.Business.Commands.UserSkill
       IAccessValidator accessValidator,
       IHttpContextAccessor httpContextAccessor,
       IResponseCreator responseCreator,
-      IEditUserSkillValidator validator,
+      IEditUserSkillRequestValidator validator,
       IDbUserSkillMapper mapper)
     {
       _userSkillRepository = userSkillRepository;
@@ -61,7 +61,7 @@ namespace LT.DigitalOffice.SkillService.Business.Commands.UserSkill
 
       OperationResultResponse<bool> response = new();
 
-      List<Guid> existSkills = await _userSkillRepository.GetUserSkillAsync(userId);
+      List<Guid> existSkills = await _userSkillRepository.GetAsync(userId);
       List<Guid> conflictSkills = request.SkillsToAdd.Intersect(request.SkillsToRemove).ToList();
 
       request.SkillsToAdd = request.SkillsToAdd.Except(conflictSkills).ToList();
@@ -72,21 +72,21 @@ namespace LT.DigitalOffice.SkillService.Business.Commands.UserSkill
 
       if (request.SkillsToAdd.Any())
       {
-        await _userSkillRepository.AddUserSkillAsync(_mapper.Map(userId, request.SkillsToAdd));
+        await _userSkillRepository.CreateAsync(_mapper.Map(userId, request.SkillsToAdd));
         await _skillRepository
             .UpgradeTotalCountAsync(request.SkillsToAdd);
       }
 
       if (request.SkillsToRemove.Any())
       {
-        await _userSkillRepository.RemoveUserSkillAsync(userId, request.SkillsToRemove);
+        await _userSkillRepository.RemoveAsync(userId, request.SkillsToRemove);
         await _skillRepository
           .DowngradeTotalCountAsync(request.SkillsToRemove);
       }
 
       response.Body = true;
 
-      await _skillRepository.RemoveUnusedSkillsAsync();
+      await _skillRepository.RemoveUnusedAsync();
 
       return response;
     }

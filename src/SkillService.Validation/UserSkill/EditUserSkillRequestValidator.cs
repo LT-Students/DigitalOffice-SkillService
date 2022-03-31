@@ -7,9 +7,9 @@ using LT.DigitalOffice.SkillService.Validation.Interfaces;
 
 namespace LT.DigitalOffice.SkillService.Validation
 {
-  public class EditUserSkillValidator : AbstractValidator<EditUserSkillRequest>, IEditUserSkillValidator
+  public class EditUserSkillRequestValidator : AbstractValidator<EditUserSkillRequest>, IEditUserSkillRequestValidator
   {
-    public EditUserSkillValidator(
+    public EditUserSkillRequestValidator(
       ISkillRepository skillRepository)
     {
       RuleFor(r => r.SkillsToAdd)
