@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FluentValidation;
 using LT.DigitalOffice.SkillService.Data.Interfaces;
@@ -7,12 +8,13 @@ using LT.DigitalOffice.SkillService.Validation.Interfaces;
 
 namespace LT.DigitalOffice.SkillService.Validation
 {
-  public class EditUserSkillRequestValidator : AbstractValidator<EditUserSkillRequest>, IEditUserSkillRequestValidator
+  public class EditUserSkillRequestValidator : AbstractValidator<(Guid id,EditUserSkillRequest request)>, IEditUserSkillRequestValidator
   {
     public EditUserSkillRequestValidator(
-      ISkillRepository skillRepository)
+      ISkillRepository skillRepository,
+      IUserSkillRepository userSkillRepository)
     {
-      RuleFor(r => r)
+      RuleFor(us => us.request)
         .Cascade(CascadeMode.Stop)
         .Must(r => r.SkillsToAdd is not null && r.SkillsToRemove is not null)
         .WithMessage("Skills lists must not be null.")
@@ -23,7 +25,10 @@ namespace LT.DigitalOffice.SkillService.Validation
         .WithMessage("Skills to add and skills to remove must be different.")
         .MustAsync(async (r, _) => await skillRepository.DoesExistAsync(r.SkillsToAdd)
         && await skillRepository.DoesExistAsync(r.SkillsToRemove))
-        .WithMessage("The skill does not exist.");
+        .WithMessage("The skill does not exist.")
+        .MustAsync(async (request, listSkill, _) => !listSkill.SkillsToAdd
+        .Intersect(await userSkillRepository.GetAsync(request.id)).Any())
+        .WithMessage("User already has these skills.");
     }
   }
 }

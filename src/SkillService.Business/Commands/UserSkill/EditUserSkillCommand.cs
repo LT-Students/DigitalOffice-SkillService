@@ -54,7 +54,7 @@ namespace LT.DigitalOffice.SkillService.Business.Commands.UserSkill
         return _responseCreator.CreateFailureResponse<bool>(HttpStatusCode.Forbidden);
       }
 
-      ValidationResult validationResult = await _validator.ValidateAsync(request);
+      ValidationResult validationResult = await _validator.ValidateAsync((userId,request));
 
       if (!validationResult.IsValid)
       {
@@ -63,18 +63,11 @@ namespace LT.DigitalOffice.SkillService.Business.Commands.UserSkill
           validationResult.Errors.Select(vf => vf.ErrorMessage).ToList());
       }
 
-      List<Guid> existSkills = await _userSkillRepository.GetAsync(userId);
-      List<string> errors = new List<string>() {"User already has these skills."};
-
-      if (existSkills.Intersect(request.SkillsToAdd).Any())
-      {
-        return _responseCreator.CreateFailureResponse<bool>(HttpStatusCode.BadRequest, errors);
-      }
-
       OperationResultResponse<bool> response = new();
 
       if (request.SkillsToRemove.Any())
       {
+        List<Guid> existSkills = await _userSkillRepository.GetAsync(userId);
         List<Guid> skillsToRemove = request.SkillsToRemove.Intersect(existSkills).ToList();
 
         await _userSkillRepository.RemoveAsync(userId, skillsToRemove);
