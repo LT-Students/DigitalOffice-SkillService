@@ -15,9 +15,9 @@ namespace LT.DigitalOffice.SkillService.Data.Interfaces
 
     Task DowngradeTotalCountAsync(List<Guid> skillsIds);
 
-    Task<bool> DoesNameExistAsync(string name);
+    Task<bool> DoesExistAsync(string name);
 
-    Task<bool> DoesNameExistAsync(Guid id);
+    Task<bool> DoesExistAsync(List<Guid> ids);
 
     Task<Guid?> CreateAsync(DbSkill skill);
   }

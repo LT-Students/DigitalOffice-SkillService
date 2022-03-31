@@ -2,6 +2,7 @@
 using LT.DigitalOffice.Kernel.Extensions;
 using LT.DigitalOffice.SkillService.Mappers.Db.Interfsaces;
 using LT.DigitalOffice.SkillService.Models.Db;
+using LT.DigitalOffice.SkillService.Models.Dto.Requests;
 using Microsoft.AspNetCore.Http;
 
 namespace LT.DigitalOffice.SkillService.Mappers.Db
@@ -16,12 +17,12 @@ namespace LT.DigitalOffice.SkillService.Mappers.Db
       _httpContextAccessor = httpContextAccessor;
     }
 
-    public DbSkill Map(string name)
+    public DbSkill Map(CreateSkillRequest request)
     {
       return new DbSkill
       {
         Id = Guid.NewGuid(),
-        Name = name.Trim().ToLower(),
+        Name = request.Name.Trim().ToLower(),
         CreatedBy = _httpContextAccessor.HttpContext.GetUserId(),
         CreatedAtUtc = DateTime.UtcNow,
         BecameUnusedAtUtc = DateTime.UtcNow,

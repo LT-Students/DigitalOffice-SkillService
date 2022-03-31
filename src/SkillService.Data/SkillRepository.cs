@@ -71,14 +71,22 @@ namespace LT.DigitalOffice.SkillService.Data
       await _provider.SaveAsync();
     }
 
-    public async Task<bool> DoesNameExistAsync(string name)
+    public async Task<bool> DoesExistAsync(string name)
     {
       return await _provider.Skills.AnyAsync(s => s.Name == name);
     }
 
-    public async Task<bool> DoesNameExistAsync(Guid id)
+    public async Task<bool> DoesExistAsync(List<Guid> ids)
     {
-      return await _provider.Skills.AnyAsync(s => s.Id == id);
+      foreach (Guid id in ids)
+      {
+        if (!await _provider.Skills.AnyAsync(s => s.Id == id))
+        {
+          return false;
+        }
+      }
+
+      return true;
     }
 
     public async Task<Guid?> CreateAsync(DbSkill skill)

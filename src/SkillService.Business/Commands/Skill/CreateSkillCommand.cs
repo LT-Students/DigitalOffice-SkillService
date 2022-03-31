@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using FluentValidation.Results;
 using LT.DigitalOffice.Kernel.FluentValidationExtensions;
 using LT.DigitalOffice.Kernel.Helpers.Interfaces;
 using LT.DigitalOffice.Kernel.Responses;
 using LT.DigitalOffice.SkillService.Business.Commands.Skill.Interfaces;
 using LT.DigitalOffice.SkillService.Data.Interfaces;
 using LT.DigitalOffice.SkillService.Mappers.Db.Interfsaces;
+using LT.DigitalOffice.SkillService.Models.Dto.Requests;
 using LT.DigitalOffice.SkillService.Validation.Interfaces;
 using Microsoft.AspNetCore.Http;
 
@@ -35,16 +38,20 @@ namespace LT.DigitalOffice.SkillService.Business.Commands.Skill
       _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<OperationResultResponse<Guid?>> ExecuteAsync(string name)
+    public async Task<OperationResultResponse<Guid?>> ExecuteAsync(CreateSkillRequest request)
     {
-      if (!_validator.ValidateCustom(name, out List<string> errors))
+      ValidationResult validationResult = await _validator.ValidateAsync(request);
+
+      if (!validationResult.IsValid)
       {
-        return _responseCreator.CreateFailureResponse<Guid?>(HttpStatusCode.BadRequest, errors);
+        return _responseCreator.CreateFailureResponse<Guid?>(
+          HttpStatusCode.BadRequest,
+          validationResult.Errors.Select(vf => vf.ErrorMessage).ToList());
       }
 
       OperationResultResponse<Guid?> response = new();
 
-      response.Body = await _repository.CreateAsync(_mapper.Map(name));
+      response.Body = await _repository.CreateAsync(_mapper.Map(request));
       _httpContextAccessor.HttpContext.Response.StatusCode = (int)HttpStatusCode.Created;
 
       if (response.Body is null)

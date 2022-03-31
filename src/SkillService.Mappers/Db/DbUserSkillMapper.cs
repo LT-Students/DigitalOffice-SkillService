@@ -28,8 +28,8 @@ namespace LT.DigitalOffice.SkillService.Mappers.Db
           Id = new Guid(),
           UserId = userId,
           SkillId = skillId,
-          AddedBy = _httpContextAccessor.HttpContext.GetUserId(),
-          AddedAtUtc = DateTime.UtcNow,
+          CreatedBy = _httpContextAccessor.HttpContext.GetUserId(),
+          CreatedAtUtc = DateTime.UtcNow,
         });
       }
 

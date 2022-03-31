@@ -34,8 +34,8 @@ namespace LT.DigitalOffice.SkillService.Data.Provider.MsSql.Ef.Migrations
           Id = table.Column<Guid>(nullable: false),
           UserId = table.Column<Guid>(nullable: false),
           SkillId = table.Column<Guid>(nullable: false),
-          AddedBy = table.Column<Guid>(nullable: false),
-          AddedAtUtc = table.Column<DateTime>(nullable: false)
+          CreatedBy = table.Column<Guid>(nullable: false),
+          CreatedAtUtc = table.Column<DateTime>(nullable: false)
         },
         constraints: table =>
         {

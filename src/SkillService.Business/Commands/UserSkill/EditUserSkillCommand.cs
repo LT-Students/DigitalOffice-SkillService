@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using FluentValidation.Results;
 using LT.DigitalOffice.Kernel.BrokerSupport.AccessValidatorEngine.Interfaces;
 using LT.DigitalOffice.Kernel.Constants;
 using LT.DigitalOffice.Kernel.Extensions;
-using LT.DigitalOffice.Kernel.FluentValidationExtensions;
 using LT.DigitalOffice.Kernel.Helpers.Interfaces;
 using LT.DigitalOffice.Kernel.Responses;
 using LT.DigitalOffice.SkillService.Business.Commands.UserSkill.Interfaces;
@@ -54,34 +54,37 @@ namespace LT.DigitalOffice.SkillService.Business.Commands.UserSkill
         return _responseCreator.CreateFailureResponse<bool>(HttpStatusCode.Forbidden);
       }
 
-      if (!_validator.ValidateCustom(request, out List<string> errors))
+      ValidationResult validationResult = await _validator.ValidateAsync(request);
+
+      if (!validationResult.IsValid)
+      {
+        return _responseCreator.CreateFailureResponse<bool>(
+          HttpStatusCode.BadRequest,
+          validationResult.Errors.Select(vf => vf.ErrorMessage).ToList());
+      }
+
+      List<Guid> existSkills = await _userSkillRepository.GetAsync(userId);
+      List<string> errors = new List<string>() {"User already has these skills."};
+
+      if (existSkills.Intersect(request.SkillsToAdd).Any())
       {
         return _responseCreator.CreateFailureResponse<bool>(HttpStatusCode.BadRequest, errors);
       }
 
       OperationResultResponse<bool> response = new();
 
-      List<Guid> existSkills = await _userSkillRepository.GetAsync(userId);
-      List<Guid> conflictSkills = request.SkillsToAdd.Intersect(request.SkillsToRemove).ToList();
+      if (request.SkillsToRemove.Any())
+      {
+        List<Guid> skillsToRemove = request.SkillsToRemove.Intersect(existSkills).ToList();
 
-      request.SkillsToAdd = request.SkillsToAdd.Except(conflictSkills).ToList();
-      request.SkillsToAdd = request.SkillsToAdd.Except(existSkills).ToList();
-
-      request.SkillsToRemove = request.SkillsToRemove.Except(conflictSkills).ToList();
-      request.SkillsToRemove = request.SkillsToRemove.Intersect(existSkills).ToList();
+        await _userSkillRepository.RemoveAsync(userId, skillsToRemove);
+        await _skillRepository.DowngradeTotalCountAsync(skillsToRemove);
+      }
 
       if (request.SkillsToAdd.Any())
       {
         await _userSkillRepository.CreateAsync(_mapper.Map(userId, request.SkillsToAdd));
-        await _skillRepository
-            .UpgradeTotalCountAsync(request.SkillsToAdd);
-      }
-
-      if (request.SkillsToRemove.Any())
-      {
-        await _userSkillRepository.RemoveAsync(userId, request.SkillsToRemove);
-        await _skillRepository
-          .DowngradeTotalCountAsync(request.SkillsToRemove);
+        await _skillRepository.UpgradeTotalCountAsync(request.SkillsToAdd);
       }
 
       response.Body = true;

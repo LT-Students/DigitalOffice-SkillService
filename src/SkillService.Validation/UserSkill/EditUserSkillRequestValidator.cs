@@ -12,24 +12,17 @@ namespace LT.DigitalOffice.SkillService.Validation
     public EditUserSkillRequestValidator(
       ISkillRepository skillRepository)
     {
-      RuleFor(r => r.SkillsToAdd)
+      RuleFor(r => r)
         .Cascade(CascadeMode.Stop)
-        .NotNull().WithMessage("Skills list must not be null.")
-        .Must(s => s.Distinct().ToList().Count == s.Count)
-        .WithMessage("The skills can not be duplicated.");
-
-      RuleFor(r => r.SkillsToRemove)
-        .Cascade(CascadeMode.Stop)
-        .NotNull().WithMessage("Skills list must not be null.")
-        .Must(s => s.Distinct().ToList().Count == s.Count)
-        .WithMessage("The skills can not be duplicated."); ;
-
-      RuleForEach(r => r.SkillsToAdd)
-        .MustAsync(async (id, _) => await skillRepository.DoesNameExistAsync(id))
-        .WithMessage("The skill does not exist.");
-
-      RuleForEach(r => r.SkillsToRemove)
-        .MustAsync(async (id, _) => await skillRepository.DoesNameExistAsync(id))
+        .Must(r => r.SkillsToAdd is not null && r.SkillsToRemove is not null)
+        .WithMessage("Skills lists must not be null.")
+        .Must(r => r.SkillsToAdd.Distinct().ToList().Count == r.SkillsToAdd.Count
+        && r.SkillsToRemove.Distinct().ToList().Count == r.SkillsToRemove.Count)
+        .WithMessage("The skills can not be duplicated.")
+        .Must(r => r.SkillsToAdd.Intersect(r.SkillsToRemove).ToList().Count == 0)
+        .WithMessage("Skills to add and skills to remove must be different.")
+        .MustAsync(async (r, _) => await skillRepository.DoesExistAsync(r.SkillsToAdd)
+        && await skillRepository.DoesExistAsync(r.SkillsToRemove))
         .WithMessage("The skill does not exist.");
     }
   }

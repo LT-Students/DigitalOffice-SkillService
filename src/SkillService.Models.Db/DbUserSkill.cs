@@ -10,8 +10,8 @@ namespace LT.DigitalOffice.SkillService.Models.Db
     public Guid Id { get; set; }
     public Guid UserId { get; set; }
     public Guid SkillId { get; set; }
-    public Guid AddedBy { get; set; }
-    public DateTime AddedAtUtc { get; set; }
+    public Guid CreatedBy { get; set; }
+    public DateTime CreatedAtUtc { get; set; }
 
     public ICollection<DbSkill> Skills { get; set; }
 

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using LT.DigitalOffice.Kernel.Responses;
 using LT.DigitalOffice.SkillService.Business.Commands.Skill.Interfaces;
+using LT.DigitalOffice.SkillService.Models.Dto.Requests;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LT.DigitalOffice.SkillService.Controllers
@@ -13,9 +14,9 @@ namespace LT.DigitalOffice.SkillService.Controllers
     [HttpPost("create")]
     public async Task<OperationResultResponse<Guid?>> CreateAsync(
       [FromServices] ICreateSkillCommand command,
-      [FromBody] string name)
+      [FromBody] CreateSkillRequest request)
     {
-      return await command.ExecuteAsync(name);
+      return await command.ExecuteAsync(request);
     }
   }
 }
