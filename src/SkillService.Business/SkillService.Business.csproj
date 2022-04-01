@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <Import Project="$(ProjectDir)..\..\Common.Configurations.targets" />
+
+    <ItemGroup>
+      <ProjectReference Include="..\SkillService.Data\SkillService.Data.csproj" />
+      <ProjectReference Include="..\SkillService.Mappers\SkillService.Mappers.csproj" />
+      <ProjectReference Include="..\SkillService.Models.Dto\SkillService.Models.Dto.csproj" />
+      <ProjectReference Include="..\SkillService.Validation\SkillService.Validation.csproj" />
+    </ItemGroup>
+
+</Project>
