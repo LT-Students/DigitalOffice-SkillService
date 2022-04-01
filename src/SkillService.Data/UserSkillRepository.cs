@@ -25,19 +25,21 @@ namespace LT.DigitalOffice.SkillService.Data
         .Where(us => us.UserId == userId).Select(us => us.SkillId).ToListAsync();
     }
 
-    public async Task CreateAsync(List<DbUserSkill> userSkills)
+    public async Task CreateAsync(List<DbUserSkill> usersSkills)
     {
-      _provider.UsersSkills.AddRange(userSkills);
+      _provider.UsersSkills.AddRange(usersSkills);
       await _provider.SaveAsync();
     }
 
-    public async Task RemoveAsync(Guid userId, List<Guid> skillsIds)
+    public async Task<List<Guid>> RemoveAsync(Guid userId, List<Guid> skillsIds)
     {
-      List<DbUserSkill> userSkills = await _provider.UsersSkills
+      List<DbUserSkill> usersSkills = await _provider.UsersSkills
         .Where(us => us.UserId == userId && skillsIds.Contains(us.SkillId)).ToListAsync();
 
-      _provider.UsersSkills.RemoveRange(userSkills);
+      _provider.UsersSkills.RemoveRange(usersSkills);
       await _provider.SaveAsync();
+
+      return usersSkills.Select(us => us.SkillId).ToList();
     }
   }
 }

@@ -76,9 +76,9 @@ namespace LT.DigitalOffice.SkillService.Data
       return await _provider.Skills.AnyAsync(s => s.Name == name);
     }
 
-    public async Task<bool> DoesExistAsync(List<Guid> ids)
+    public async Task<bool> DoesExistAsync(List<Guid> skillsIds)
     {
-      foreach (Guid id in ids)
+      foreach (Guid id in skillsIds)
       {
         if (!await _provider.Skills.AnyAsync(s => s.Id == id))
         {

@@ -67,11 +67,8 @@ namespace LT.DigitalOffice.SkillService.Business.Commands.UserSkill
 
       if (request.SkillsToRemove.Any())
       {
-        List<Guid> existSkills = await _userSkillRepository.GetAsync(userId);
-        List<Guid> skillsToRemove = request.SkillsToRemove.Intersect(existSkills).ToList();
-
-        await _userSkillRepository.RemoveAsync(userId, skillsToRemove);
-        await _skillRepository.DowngradeTotalCountAsync(skillsToRemove);
+        await _skillRepository.DowngradeTotalCountAsync(
+          await _userSkillRepository.RemoveAsync(userId, request.SkillsToRemove));
       }
 
       if (request.SkillsToAdd.Any())
