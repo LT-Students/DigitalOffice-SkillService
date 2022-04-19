@@ -9,9 +9,12 @@ using LT.DigitalOffice.Kernel.Configurations;
 using LT.DigitalOffice.Kernel.Extensions;
 using LT.DigitalOffice.Kernel.Helpers;
 using LT.DigitalOffice.Kernel.Middlewares.ApiInformation;
+using LT.DigitalOffice.SkillService.Broker.Consumers;
 using LT.DigitalOffice.SkillService.Data.Provider.MsSql.Ef;
 using LT.DigitalOffice.SkillService.Models.Dto.Configuration;
 using MassTransit;
+using MassTransit.ExtensionsDependencyInjectionIntegration;
+using MassTransit.RabbitMqTransport;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
@@ -169,11 +172,10 @@ namespace LT.DigitalOffice.SkillService
 
     private void ConfigureMassTransit(IServiceCollection services)
     {
-      (var username, var password) = GetRabbitMqCredentials();
+      (string username, string password) = GetRabbitMqCredentials();
 
       services.AddMassTransit(x =>
       {
-
         x.UsingRabbitMq((context, cfg) =>
         {
           cfg.Host(_rabbitMqConfig.Host, "/", host =>
@@ -182,12 +184,32 @@ namespace LT.DigitalOffice.SkillService
             host.Password(password);
           });
 
+          ConfigureEndpoints(context, cfg, _rabbitMqConfig);
         });
+
+        ConfigureConsumers(x);
 
         x.AddRequestClients(_rabbitMqConfig);
       });
 
       services.AddMassTransitHostedService();
+    }
+
+    private void ConfigureEndpoints(
+      IBusRegistrationContext context, 
+      IRabbitMqBusFactoryConfigurator cfg, 
+      RabbitMqConfig rabbitMqConfig)
+    {
+      //TODO: Check proper endpoint
+      cfg.ReceiveEndpoint(rabbitMqConfig.CheckUserRightsEndpoint, ep =>
+      {
+        ep.ConfigureConsumer<GetUserSkillsConsumer>(context);
+      });
+    }
+
+    private void ConfigureConsumers(IServiceCollectionBusConfigurator x)
+    {
+      x.AddConsumer<GetUserSkillsConsumer>();
     }
 
     private void UpdateDatabase(IApplicationBuilder app)
