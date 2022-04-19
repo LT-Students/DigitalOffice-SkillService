@@ -201,7 +201,7 @@ namespace LT.DigitalOffice.SkillService
       RabbitMqConfig rabbitMqConfig)
     {
       //TODO: Check proper endpoint
-      cfg.ReceiveEndpoint(rabbitMqConfig.CheckUserRightsEndpoint, ep =>
+      cfg.ReceiveEndpoint("SkillService_GetUserSkills", ep =>
       {
         ep.ConfigureConsumer<GetUserSkillsConsumer>(context);
       });
