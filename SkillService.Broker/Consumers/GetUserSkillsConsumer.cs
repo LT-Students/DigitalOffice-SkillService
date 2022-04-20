@@ -15,6 +15,17 @@ namespace LT.DigitalOffice.SkillService.Broker.Consumers
   {
     private readonly IUserSkillRepository _repository;
 
+    private async Task<List<UserSkillData>> GetUserSkillsAsync(IGetUserSkillsRequest request)
+    {
+      List<DbUserSkill> userSkills = await _repository.GetUserSkillsAsync(request.UserId);
+
+      return userSkills.Select(
+          us => new UserSkillData(
+            us.Skill.Id,
+            us.Skill.Name))
+        .ToList();
+    }
+
     public GetUserSkillsConsumer(IUserSkillRepository repository)
     {
       _repository = repository;
@@ -26,17 +37,6 @@ namespace LT.DigitalOffice.SkillService.Broker.Consumers
 
       await context.RespondAsync<IOperationResult<IGetUserSkillsResponse>>(
         OperationResultWrapper.CreateResponse(_ => IGetUserSkillsResponse.CreateObj(userSkills), context));
-    }
-
-    private async Task<List<UserSkillData>> GetUserSkillsAsync(IGetUserSkillsRequest request)
-    {
-      List<DbUserSkill> userSkills = await _repository.GetUserSkillsAsync(request.UserId);
-
-      return userSkills.Select(
-        us => new UserSkillData(
-          us.Skill.Id,
-          us.Skill.Name))
-        .ToList();
     }
   }
 }
