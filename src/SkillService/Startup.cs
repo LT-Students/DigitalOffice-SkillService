@@ -200,7 +200,6 @@ namespace LT.DigitalOffice.SkillService
       IRabbitMqBusFactoryConfigurator cfg, 
       RabbitMqConfig rabbitMqConfig)
     {
-      //TODO: Check proper endpoint
       cfg.ReceiveEndpoint(rabbitMqConfig.GetUserSkillsEndpoint, ep =>
       {
         ep.ConfigureConsumer<GetUserSkillsConsumer>(context);
