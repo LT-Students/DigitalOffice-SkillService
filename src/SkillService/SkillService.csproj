@@ -10,7 +10,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\SkillService.Broker\SkillService.Broker.csproj" />
+      <ProjectReference Include="..\SkillService.Broker\SkillService.Broker.csproj" />
       <ProjectReference Include="..\SkillService.Business\SkillService.Business.csproj" />
       <ProjectReference Include="..\SkillService.Data.Provider.MsSql.Ef\SkillService.Data.Provider.MsSql.Ef.csproj" />
       <ProjectReference Include="..\SkillService.Data\SkillService.Data.csproj" />
