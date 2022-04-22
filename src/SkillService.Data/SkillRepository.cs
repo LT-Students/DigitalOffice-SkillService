@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using LT.DigitalOffice.SkillService.Data.Interfaces;
 using LT.DigitalOffice.SkillService.Data.Provider;
 using LT.DigitalOffice.SkillService.Models.Db;
+using LT.DigitalOffice.SkillService.Models.Dto.Requests.Filters;
 using Microsoft.EntityFrameworkCore;
 
 namespace LT.DigitalOffice.SkillService.Data
@@ -100,6 +101,47 @@ namespace LT.DigitalOffice.SkillService.Data
       await _provider.SaveAsync();
 
       return skill.Id;
+    }
+  
+    private IQueryable<DbSkill> CreateFindPredicates(
+      FindSkillFilter filter,
+      IQueryable<DbSkill> dbSkill)
+    {
+      if (!filter.AscendingSort.HasValue && string.IsNullOrEmpty(filter.NameIncludeSubstring))
+      {
+        dbSkill = dbSkill.OrderByDescending(skill => skill.TotalCount);
+      }
+
+      if (!string.IsNullOrEmpty(filter.NameIncludeSubstring))
+      {
+        dbSkill = dbSkill.Where(
+          skill =>
+            skill.Name.Contains(filter.NameIncludeSubstring));
+      }
+
+      if (filter.AscendingSort.HasValue)
+      {
+        dbSkill = filter.AscendingSort.Value
+          ? dbSkill.OrderBy(skill => skill.Name)
+          : dbSkill.OrderByDescending(skill => skill.Name);
+      }
+      return dbSkill;
+    }
+
+    public async Task<(List<DbSkill> dbSkill, int totalCount)> FindAsync(FindSkillFilter filter)
+    {
+      if (filter is null)
+      {
+        return (null, default);
+      }
+
+      IQueryable<DbSkill> dbSkill = CreateFindPredicates(
+        filter,
+        _provider.Skills.AsQueryable());
+
+      return (
+        await dbSkill.Skip(filter.SkipCount).Take(filter.TakeCount).ToListAsync(),
+        await dbSkill.CountAsync());
     }
   }
 }

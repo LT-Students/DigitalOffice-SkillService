@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using LT.DigitalOffice.Kernel.Attributes;
 using LT.DigitalOffice.SkillService.Models.Db;
+using LT.DigitalOffice.SkillService.Models.Dto.Requests.Filters;
 
 namespace LT.DigitalOffice.SkillService.Data.Interfaces
 {
@@ -20,5 +21,7 @@ namespace LT.DigitalOffice.SkillService.Data.Interfaces
     Task<bool> DoesExistAsync(List<Guid> ids);
 
     Task<Guid?> CreateAsync(DbSkill skill);
+
+    Task<(List<DbSkill> dbSkill, int totalCount)> FindAsync(FindSkillFilter filter);
   }
 }
