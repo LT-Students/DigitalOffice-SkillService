@@ -14,6 +14,32 @@ namespace LT.DigitalOffice.SkillService.Data
   {
     private readonly IDataProvider _provider;
 
+    private IQueryable<DbSkill> CreateFindPredicates(
+      FindSkillFilter filter,
+      IQueryable<DbSkill> dbSkill)
+    {
+      if (!string.IsNullOrEmpty(filter.NameIncludeSubstring))
+      {
+        dbSkill = dbSkill.Where(
+          skill =>
+            skill.Name.Contains(filter.NameIncludeSubstring));
+      }
+
+      if (filter.IsAscendingSort.HasValue)
+      {
+        dbSkill = filter.IsAscendingSort.Value
+          ? dbSkill.OrderBy(skill => skill.Name)
+          : dbSkill.OrderByDescending(skill => skill.Name);
+      }
+
+      else
+      {
+        dbSkill = dbSkill.OrderByDescending(skill => skill.TotalCount);
+      }
+
+      return dbSkill;
+    }
+
     public SkillRepository(
       IDataProvider provider)
     {
@@ -103,31 +129,6 @@ namespace LT.DigitalOffice.SkillService.Data
       return skill.Id;
     }
   
-    private IQueryable<DbSkill> CreateFindPredicates(
-      FindSkillFilter filter,
-      IQueryable<DbSkill> dbSkill)
-    {
-      if (!filter.AscendingSort.HasValue && string.IsNullOrEmpty(filter.NameIncludeSubstring))
-      {
-        dbSkill = dbSkill.OrderByDescending(skill => skill.TotalCount);
-      }
-
-      if (!string.IsNullOrEmpty(filter.NameIncludeSubstring))
-      {
-        dbSkill = dbSkill.Where(
-          skill =>
-            skill.Name.Contains(filter.NameIncludeSubstring));
-      }
-
-      if (filter.AscendingSort.HasValue)
-      {
-        dbSkill = filter.AscendingSort.Value
-          ? dbSkill.OrderBy(skill => skill.Name)
-          : dbSkill.OrderByDescending(skill => skill.Name);
-      }
-      return dbSkill;
-    }
-
     public async Task<(List<DbSkill> dbSkill, int totalCount)> FindAsync(FindSkillFilter filter)
     {
       if (filter is null)

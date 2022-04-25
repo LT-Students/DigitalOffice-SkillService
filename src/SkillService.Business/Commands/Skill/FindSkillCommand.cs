@@ -46,15 +46,10 @@ namespace LT.DigitalOffice.SkillService.Business.Commands.Skill
       (List<DbSkill> dbSkills, int totalCount) = await _skillRepository.FindAsync(filter);
 
       response.Body = new();
-      response.Body
-        .AddRange(dbSkills.Select(dbSkill =>
-        _skillInfoMapper.Map(dbSkill)));
-
+   
+      response.Body = dbSkills.Select(dbSkill =>_skillInfoMapper.Map(dbSkill)).ToList();
       response.TotalCount = totalCount;
-      response.Status = response.Errors.Any()
-        ? OperationResultStatusType.PartialSuccess
-        : OperationResultStatusType.FullSuccess;
-
+      
       return response;
     }
   }
