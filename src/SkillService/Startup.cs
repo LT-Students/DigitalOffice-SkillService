@@ -204,11 +204,17 @@ namespace LT.DigitalOffice.SkillService
       {
         ep.ConfigureConsumer<GetUserSkillsConsumer>(context);
       });
+
+      cfg.ReceiveEndpoint(rabbitMqConfig.DisactivateUserEndpoint, ep =>
+      {
+        ep.ConfigureConsumer<DisactivateUserSkillConsumer>(context);
+      });
     }
 
     private void ConfigureConsumers(IServiceCollectionBusConfigurator x)
     {
       x.AddConsumer<GetUserSkillsConsumer>();
+      x.AddConsumer<DisactivateUserSkillConsumer>();
     }
 
     private void UpdateDatabase(IApplicationBuilder app)
