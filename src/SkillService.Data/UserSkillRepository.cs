@@ -41,8 +41,18 @@ namespace LT.DigitalOffice.SkillService.Data
 
     public async Task<List<Guid>> RemoveAsync(Guid userId, List<Guid> skillsIds)
     {
-      List<DbUserSkill> usersSkills = await _provider.UsersSkills
-        .Where(us => us.UserId == userId && skillsIds.Contains(us.SkillId)).ToListAsync();
+      List<DbUserSkill> usersSkills;
+
+      if (skillsIds is null)
+      {
+        usersSkills = await _provider.UsersSkills
+          .Where(us => us.UserId == userId).ToListAsync();
+      }
+      else
+      {
+        usersSkills = await _provider.UsersSkills
+          .Where(us => us.UserId == userId && skillsIds.Contains(us.SkillId)).ToListAsync();
+      }
 
       _provider.UsersSkills.RemoveRange(usersSkills);
       await _provider.SaveAsync();
