@@ -8,8 +8,8 @@ namespace LT.DigitalOffice.SkillService.Models.Dto.Requests.Filters
     [FromQuery(Name = "nameincludesubstring")]
     public string NameIncludeSubstring { get; set; }
 
-    [FromQuery(Name = "ascendingsort")]
-    public bool? AscendingSort { get; set; }
+    [FromQuery(Name = "isascendingsort")]
+    public bool? IsAscendingSort { get; set; }
 
   }
 }

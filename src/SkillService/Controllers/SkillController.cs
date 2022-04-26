@@ -21,7 +21,7 @@ namespace LT.DigitalOffice.SkillService.Controllers
     {
       return await command.ExecuteAsync(request);
     }
-    [HttpGet("findskill")]
+    [HttpGet("find")]
     public async Task<FindResultResponse<SkillInfo>> FindAsync(
       [FromServices] IFindSkillCommand command,
       [FromQuery] FindSkillFilter filter)
