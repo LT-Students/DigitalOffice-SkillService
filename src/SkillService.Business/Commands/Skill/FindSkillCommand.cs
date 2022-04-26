@@ -12,7 +12,6 @@ using LT.DigitalOffice.SkillService.Models.Dto.Requests.Filters;
 using LT.DigitalOffice.Kernel.Helpers.Interfaces;
 using LT.DigitalOffice.Kernel.FluentValidationExtensions;
 using LT.DigitalOffice.SkillService.Models.Db;
-using LT.DigitalOffice.Kernel.Enums;
 
 namespace LT.DigitalOffice.SkillService.Business.Commands.Skill
 {
@@ -45,11 +44,8 @@ namespace LT.DigitalOffice.SkillService.Business.Commands.Skill
 
       (List<DbSkill> dbSkills, int totalCount) = await _skillRepository.FindAsync(filter);
 
-      if (!dbSkills.Equals(null))
-      {
-        response.Body = dbSkills.Select(dbSkill => _skillInfoMapper.Map(dbSkill)).ToList();
-        response.TotalCount = totalCount;
-      }
+      response.Body = dbSkills?.Select(dbSkill => _skillInfoMapper.Map(dbSkill)).ToList();
+      response.TotalCount = totalCount;
 
       return response;
     }
