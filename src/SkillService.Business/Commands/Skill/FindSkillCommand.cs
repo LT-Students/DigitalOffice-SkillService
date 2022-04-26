@@ -39,21 +39,16 @@ namespace LT.DigitalOffice.SkillService.Business.Commands.Skill
     {
       if (!_baseFindValidator.ValidateCustom(filter, out List<string> errors))
       {
-        return _responseCreator.CreateFailureFindResponse<SkillInfo> (HttpStatusCode.BadRequest, errors);
+        return _responseCreator.CreateFailureFindResponse<SkillInfo>(HttpStatusCode.BadRequest, errors);
       }
       FindResultResponse<SkillInfo> response = new();
 
       (List<DbSkill> dbSkills, int totalCount) = await _skillRepository.FindAsync(filter);
 
-      response.Body = new();
-      response.Body
-        .AddRange(dbSkills.Select(dbSkill =>
-        _skillInfoMapper.Map(dbSkill)));
-
-      response.TotalCount = totalCount;
-      response.Status = response.Errors.Any()
-        ? OperationResultStatusType.PartialSuccess
-        : OperationResultStatusType.FullSuccess;
+      if (!dbSkills.Equals(null)) { 
+        response.Body = dbSkills.Select(dbSkill => _skillInfoMapper.Map(dbSkill)).ToList();
+        response.TotalCount = totalCount;
+      }
 
       return response;
     }
