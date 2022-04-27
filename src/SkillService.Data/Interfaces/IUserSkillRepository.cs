@@ -9,7 +9,9 @@ namespace LT.DigitalOffice.SkillService.Data.Interfaces
   [AutoInject]
   public interface IUserSkillRepository
   {
-    Task<List<Guid>> GetAsync(Guid userId);
+    Task<List<Guid>> GetUserSkillIdsAsync(Guid userId);
+
+    Task<List<DbUserSkill>> GetAsync(Guid userId);
 
     Task CreateAsync(List<DbUserSkill> usersSkills);
 
