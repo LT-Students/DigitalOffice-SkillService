@@ -10,6 +10,5 @@ namespace LT.DigitalOffice.SkillService.Models.Dto.Requests.Filters
 
     [FromQuery(Name = "isAscendingSort")]
     public bool? IsAscendingSort { get; set; }
-
   }
 }
