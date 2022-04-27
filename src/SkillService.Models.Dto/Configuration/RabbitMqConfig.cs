@@ -10,7 +10,6 @@ namespace LT.DigitalOffice.SkillService.Models.Dto.Configuration
     [AutoInjectRequest(typeof(IGetUserSkillsRequest))]
     public string GetUserSkillsEndpoint { get; set; }
 
-    [AutoInjectRequest(typeof(IDisactivateUserPublish))]
     public string DisactivateUserEndpoint { get; set; }
   }
 }
