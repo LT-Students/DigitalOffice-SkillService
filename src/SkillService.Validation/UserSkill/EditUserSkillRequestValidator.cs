@@ -27,7 +27,7 @@ namespace LT.DigitalOffice.SkillService.Validation
         && await skillRepository.DoesExistAsync(r.SkillsToRemove))
         .WithMessage("The skill does not exist.")
         .MustAsync(async (request, listSkill, _) => !listSkill.SkillsToAdd
-        .Intersect(await userSkillRepository.GetAsync(request.id)).Any())
+        .Intersect(await userSkillRepository.GetUserSkillIdsAsync(request.id)).Any())
         .WithMessage("User already has these skills.");
     }
   }
