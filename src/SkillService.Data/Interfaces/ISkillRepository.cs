@@ -22,6 +22,6 @@ namespace LT.DigitalOffice.SkillService.Data.Interfaces
 
     Task<Guid?> CreateAsync(DbSkill skill);
 
-    Task<(List<DbSkill> dbSkill, int totalCount)> FindAsync(FindSkillFilter filter);
+    Task<(List<DbSkill> dbSkills, int totalCount)> FindAsync(FindSkillFilter filter);
   }
 }

@@ -40,6 +40,7 @@ namespace LT.DigitalOffice.SkillService.Business.Commands.Skill
       {
         return _responseCreator.CreateFailureFindResponse<SkillInfo>(HttpStatusCode.BadRequest, errors);
       }
+
       FindResultResponse<SkillInfo> response = new();
 
       (List<DbSkill> dbSkills, int totalCount) = await _skillRepository.FindAsync(filter);
