@@ -1,6 +1,6 @@
 ﻿using System;
 using LT.DigitalOffice.Kernel.Extensions;
-using LT.DigitalOffice.SkillService.Mappers.Db.Interfsaces;
+using LT.DigitalOffice.SkillService.Mappers.Db.Interfaces;
 using LT.DigitalOffice.SkillService.Models.Db;
 using LT.DigitalOffice.SkillService.Models.Dto.Requests;
 using Microsoft.AspNetCore.Http;

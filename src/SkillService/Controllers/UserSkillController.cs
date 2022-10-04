@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using LT.DigitalOffice.Kernel.Responses;
 using LT.DigitalOffice.SkillService.Business.Commands.UserSkill.Interfaces;
+using LT.DigitalOffice.SkillService.Models.Dto.Models;
 using LT.DigitalOffice.SkillService.Models.Dto.Requests;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,6 +20,14 @@ namespace LT.DigitalOffice.SkillService.Controllers
       [FromBody] EditUserSkillRequest request)
     {
       return await command.ExecuteAsync(userId, request);
+    }
+
+    [HttpGet("get")]
+    public async Task<OperationResultResponse<List<ShortSkillInfo>>> GetSkillAsync(
+      [FromServices] IGetUserSkillCommand command,
+      [FromQuery] Guid userId)
+    {
+      return await command.ExecuteAsync(userId);
     }
   }
 }

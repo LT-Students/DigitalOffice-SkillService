@@ -127,7 +127,7 @@ namespace LT.DigitalOffice.SkillService.Data
       return skill.Id;
     }
   
-    public async Task<(List<DbSkill> dbSkill, int totalCount)> FindAsync(FindSkillFilter filter)
+    public async Task<(List<DbSkill> dbSkills, int totalCount)> FindAsync(FindSkillFilter filter)
     {
       if (filter is null)
       {
