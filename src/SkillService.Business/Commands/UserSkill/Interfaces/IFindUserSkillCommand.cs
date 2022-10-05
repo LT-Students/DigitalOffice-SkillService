@@ -8,7 +8,7 @@ using LT.DigitalOffice.SkillService.Models.Dto.Models;
 namespace LT.DigitalOffice.SkillService.Business.Commands.UserSkill.Interfaces
 {
   [AutoInject]
-  public interface IGetUserSkillCommand
+  public interface IFindUserSkillCommand
   {
     Task<OperationResultResponse<List<ShortSkillInfo>>> ExecuteAsync(Guid userId);
   }

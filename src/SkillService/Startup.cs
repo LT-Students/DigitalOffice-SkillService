@@ -196,8 +196,8 @@ namespace LT.DigitalOffice.SkillService
     }
 
     private void ConfigureEndpoints(
-      IBusRegistrationContext context, 
-      IRabbitMqBusFactoryConfigurator cfg, 
+      IBusRegistrationContext context,
+      IRabbitMqBusFactoryConfigurator cfg,
       RabbitMqConfig rabbitMqConfig)
     {
       cfg.ReceiveEndpoint(rabbitMqConfig.DisactivateUserEndpoint, ep =>

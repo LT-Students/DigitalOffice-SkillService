@@ -11,7 +11,7 @@ namespace LT.DigitalOffice.SkillService.Data.Interfaces
   {
     Task<List<Guid>> GetUserSkillIdsAsync(Guid userId);
 
-    Task<List<DbSkill>> GetAsync(Guid userId);
+    Task<List<DbSkill>> FindAsync(Guid userId);
 
     Task CreateAsync(List<DbUserSkill> usersSkills);
 

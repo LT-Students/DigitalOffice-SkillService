@@ -22,9 +22,9 @@ namespace LT.DigitalOffice.SkillService.Controllers
       return await command.ExecuteAsync(userId, request);
     }
 
-    [HttpGet("get")]
-    public async Task<OperationResultResponse<List<ShortSkillInfo>>> GetSkillAsync(
-      [FromServices] IGetUserSkillCommand command,
+    [HttpGet("find")]
+    public async Task<OperationResultResponse<List<ShortSkillInfo>>> FindSkillAsync(
+      [FromServices] IFindUserSkillCommand command,
       [FromQuery] Guid userId)
     {
       return await command.ExecuteAsync(userId);
