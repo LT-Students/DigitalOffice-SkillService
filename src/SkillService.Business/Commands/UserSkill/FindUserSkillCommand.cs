@@ -10,28 +10,26 @@ using LT.DigitalOffice.SkillService.Models.Db;
 using LT.DigitalOffice.SkillService.Models.Dto.Models;
 using MassTransit.Initializers;
 
-namespace LT.DigitalOffice.SkillService.Business.Commands.UserSkill
+namespace LT.DigitalOffice.SkillService.Business.Commands.UserSkill;
+public class FindUserSkillCommand : IFindUserSkillCommand
 {
-  public class FindUserSkillCommand : IFindUserSkillCommand
+  private readonly IUserSkillRepository _userSkillRepository;
+  private readonly IShortSkillInfoMapper _shotrSkillInfoMapper;
+
+  public FindUserSkillCommand(
+    IUserSkillRepository userSkillRepository,
+    IShortSkillInfoMapper shotrSkillInfoMapper)
   {
-    private readonly IUserSkillRepository _userSkillRepository;
-    private readonly IShortSkillInfoMapper _shotrSkillInfoMapper;
+    _userSkillRepository = userSkillRepository;
+    _shotrSkillInfoMapper = shotrSkillInfoMapper;
+  }
 
-    public FindUserSkillCommand(
-      IUserSkillRepository userSkillRepository,
-      IShortSkillInfoMapper shotrSkillInfoMapper)
-    {
-      _userSkillRepository = userSkillRepository;
-      _shotrSkillInfoMapper = shotrSkillInfoMapper;
-    }
+  public async Task<OperationResultResponse<List<ShortSkillInfo>>> ExecuteAsync(Guid userId)
+  {
+    OperationResultResponse<List<ShortSkillInfo>> response = new();
+    List<DbSkill> dbSkillsList = await _userSkillRepository.FindAsync(userId);
+    response.Body = dbSkillsList.Select(_shotrSkillInfoMapper.Map).ToList();
 
-    public async Task<OperationResultResponse<List<ShortSkillInfo>>> ExecuteAsync(Guid userId)
-    {
-      OperationResultResponse<List<ShortSkillInfo>> response = new();
-      List<DbSkill> dbSkillsList = await _userSkillRepository.FindAsync(userId);
-      response.Body = dbSkillsList.Select(_shotrSkillInfoMapper.Map).ToList();
-
-      return response;
-    }
+    return response;
   }
 }

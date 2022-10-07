@@ -1,10 +1,8 @@
 ﻿using System;
 
-namespace LT.DigitalOffice.SkillService.Models.Dto.Models
+namespace LT.DigitalOffice.SkillService.Models.Dto.Models;
+public record ShortSkillInfo
 {
-  public record ShortSkillInfo
-  {
-    public Guid Id { get; set; }
-    public string Name { get; set; }
-  }
+  public Guid Id { get; set; }
+  public string Name { get; set; }
 }

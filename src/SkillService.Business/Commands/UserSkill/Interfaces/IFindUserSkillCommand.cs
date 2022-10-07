@@ -5,11 +5,9 @@ using LT.DigitalOffice.Kernel.Attributes;
 using LT.DigitalOffice.Kernel.Responses;
 using LT.DigitalOffice.SkillService.Models.Dto.Models;
 
-namespace LT.DigitalOffice.SkillService.Business.Commands.UserSkill.Interfaces
+namespace LT.DigitalOffice.SkillService.Business.Commands.UserSkill.Interfaces;
+[AutoInject]
+public interface IFindUserSkillCommand
 {
-  [AutoInject]
-  public interface IFindUserSkillCommand
-  {
-    Task<OperationResultResponse<List<ShortSkillInfo>>> ExecuteAsync(Guid userId);
-  }
+  Task<OperationResultResponse<List<ShortSkillInfo>>> ExecuteAsync(Guid userId);
 }

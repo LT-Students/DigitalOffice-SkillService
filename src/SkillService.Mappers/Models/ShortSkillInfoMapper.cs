@@ -2,22 +2,17 @@
 using LT.DigitalOffice.SkillService.Models.Db;
 using LT.DigitalOffice.SkillService.Models.Dto.Models;
 
-namespace LT.DigitalOffice.SkillService.Mappers.Models
+namespace LT.DigitalOffice.SkillService.Mappers.Models;
+public class ShortSkillInfoMapper : IShortSkillInfoMapper
 {
-  public class ShortSkillInfoMapper : IShortSkillInfoMapper
+  public ShortSkillInfo Map(DbSkill dbSkill)
   {
-    public ShortSkillInfo Map(DbSkill dbSkill)
-    {
-      if (dbSkill is null)
-      {
-        return null;
-      }
-
-      return new ShortSkillInfo
+    return dbSkill is null 
+      ? null 
+      : new ShortSkillInfo
       {
         Id = dbSkill.Id,
         Name = dbSkill.Name
       };
-    }
   }
 }
