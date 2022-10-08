@@ -11,6 +11,7 @@ using LT.DigitalOffice.SkillService.Models.Dto.Models;
 using MassTransit.Initializers;
 
 namespace LT.DigitalOffice.SkillService.Business.Commands.UserSkill;
+
 public class FindUserSkillCommand : IFindUserSkillCommand
 {
   private readonly IUserSkillRepository _userSkillRepository;

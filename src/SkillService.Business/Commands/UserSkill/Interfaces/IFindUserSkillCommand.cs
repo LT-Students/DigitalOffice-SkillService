@@ -6,6 +6,7 @@ using LT.DigitalOffice.Kernel.Responses;
 using LT.DigitalOffice.SkillService.Models.Dto.Models;
 
 namespace LT.DigitalOffice.SkillService.Business.Commands.UserSkill.Interfaces;
+
 [AutoInject]
 public interface IFindUserSkillCommand
 {

@@ -3,6 +3,7 @@ using LT.DigitalOffice.SkillService.Models.Db;
 using LT.DigitalOffice.SkillService.Models.Dto.Models;
 
 namespace LT.DigitalOffice.SkillService.Mappers.Models;
+
 public class ShortSkillInfoMapper : IShortSkillInfoMapper
 {
   public ShortSkillInfo Map(DbSkill dbSkill)
