@@ -2,16 +2,16 @@
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using LT.DigitalOffice.Kernel.FluentValidationExtensions;
+using LT.DigitalOffice.Kernel.Helpers.Interfaces;
 using LT.DigitalOffice.Kernel.Responses;
 using LT.DigitalOffice.Kernel.Validators.Interfaces;
 using LT.DigitalOffice.SkillService.Business.Commands.Skill.Interfaces;
 using LT.DigitalOffice.SkillService.Data.Interfaces;
-using LT.DigitalOffice.SkillService.Models.Dto.Models;
-using LT.DigitalOffice.SkillService.Mappers.Db.Interfsaces;
-using LT.DigitalOffice.SkillService.Models.Dto.Requests.Filters;
-using LT.DigitalOffice.Kernel.Helpers.Interfaces;
-using LT.DigitalOffice.Kernel.FluentValidationExtensions;
+using LT.DigitalOffice.SkillService.Mappers.Models.Interfaces;
 using LT.DigitalOffice.SkillService.Models.Db;
+using LT.DigitalOffice.SkillService.Models.Dto.Models;
+using LT.DigitalOffice.SkillService.Models.Dto.Requests.Filters;
 
 namespace LT.DigitalOffice.SkillService.Business.Commands.Skill
 {

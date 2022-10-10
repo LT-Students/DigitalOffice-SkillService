@@ -196,15 +196,10 @@ namespace LT.DigitalOffice.SkillService
     }
 
     private void ConfigureEndpoints(
-      IBusRegistrationContext context, 
-      IRabbitMqBusFactoryConfigurator cfg, 
+      IBusRegistrationContext context,
+      IRabbitMqBusFactoryConfigurator cfg,
       RabbitMqConfig rabbitMqConfig)
     {
-      cfg.ReceiveEndpoint(rabbitMqConfig.GetUserSkillsEndpoint, ep =>
-      {
-        ep.ConfigureConsumer<GetUserSkillsConsumer>(context);
-      });
-
       cfg.ReceiveEndpoint(rabbitMqConfig.DisactivateUserEndpoint, ep =>
       {
         ep.ConfigureConsumer<DisactivateUserSkillsConsumer>(context);
@@ -213,7 +208,6 @@ namespace LT.DigitalOffice.SkillService
 
     private void ConfigureConsumers(IServiceCollectionBusConfigurator x)
     {
-      x.AddConsumer<GetUserSkillsConsumer>();
       x.AddConsumer<DisactivateUserSkillsConsumer>();
     }
 

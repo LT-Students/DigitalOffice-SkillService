@@ -1,8 +1,8 @@
-﻿using LT.DigitalOffice.SkillService.Mappers.Db.Interfsaces;
+﻿using LT.DigitalOffice.SkillService.Mappers.Models.Interfaces;
 using LT.DigitalOffice.SkillService.Models.Db;
 using LT.DigitalOffice.SkillService.Models.Dto.Models;
 
-namespace LT.DigitalOffice.SkillService.Mappers.Db
+namespace LT.DigitalOffice.SkillService.Mappers.Models
 {
   public class SkillInfoMapper : ISkillInfoMapper
   {

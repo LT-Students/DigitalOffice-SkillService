@@ -25,11 +25,12 @@ namespace LT.DigitalOffice.SkillService.Data
         .Where(us => us.UserId == userId).Select(us => us.SkillId).ToListAsync();
     }
 
-    public async Task<List<DbUserSkill>> GetAsync(Guid userId)
+    public Task<List<DbSkill>> FindAsync(Guid userId)
     {
-      return await _provider.UsersSkills
+      return _provider.UsersSkills
         .Where(us => us.UserId == userId)
         .Include(us => us.Skill)
+        .Select(us => us.Skill)
         .ToListAsync();
     }
 

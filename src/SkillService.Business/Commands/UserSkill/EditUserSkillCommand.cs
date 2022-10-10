@@ -11,7 +11,7 @@ using LT.DigitalOffice.Kernel.Helpers.Interfaces;
 using LT.DigitalOffice.Kernel.Responses;
 using LT.DigitalOffice.SkillService.Business.Commands.UserSkill.Interfaces;
 using LT.DigitalOffice.SkillService.Data.Interfaces;
-using LT.DigitalOffice.SkillService.Mappers.Db.Interfsaces;
+using LT.DigitalOffice.SkillService.Mappers.Db.Interfaces;
 using LT.DigitalOffice.SkillService.Models.Dto.Requests;
 using LT.DigitalOffice.SkillService.Validation.Interfaces;
 using Microsoft.AspNetCore.Http;
